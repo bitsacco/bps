@@ -170,15 +170,31 @@ export const offeringDataBTCToKES: OfferingData = {
   },
 }
 
+function applyRandomVariance(base: number, maxVariancePercent: number): number {
+  const variance = (randomBytes(1)[0] / 255) * maxVariancePercent * 2 - maxVariancePercent;
+  return base * (1 + variance / 100);
+}
+
 async function createOfferingForPFI(pfiIndex: number, baseOfferingData: OfferingData): Promise<Offering> {
   const pfiDid = config.pfiDid[pfiIndex];
+
+  // Apply up to 5% variance to the exchange rate
+  const adjustedRate = applyRandomVariance(
+    parseFloat(baseOfferingData.payoutUnitsPerPayinUnit),
+    5
+  );
+
+  const offeringData = {
+    ...baseOfferingData,
+    payoutUnitsPerPayinUnit: adjustedRate.toFixed(6),
+  };
 
   const offering = Offering.create({
     metadata: {
       from: pfiDid.uri,
       protocol: '1.0'
     },
-    data: baseOfferingData,
+    data: offeringData,
   });
 
   try {
