@@ -170,44 +170,37 @@ export const offeringDataBTCToKES: OfferingData = {
   },
 }
 
-const customOfferings = [
-  { data: { ...offeringDataKESToBTC } },
-  { data: { ...offeringDataBTCToKES } },
-]
+async function createOfferingForPFI(pfiIndex: number, baseOfferingData: OfferingData): Promise<Offering> {
+  const pfiDid = config.pfiDid[pfiIndex];
 
-// Function to create a randomized offering
-async function createRandomOffering(index: number): Promise<Offering> {
-
-  const customPFIIndex = index % 5 // 5 is number of hardcoded PFI DIDs
   const offering = Offering.create({
     metadata: {
-      from: config.pfiDid[customPFIIndex].uri,  // Alternates between two URIs
+      from: pfiDid.uri,
       protocol: '1.0'
     },
-    data: customOfferings[index].data //chooseRandomOfferingData(customPFIIndex),
-  })
+    data: baseOfferingData,
+  });
 
   try {
-    await offering.sign(config.pfiDid[customPFIIndex])
-    // console.log('Offering signed')
+    await offering.sign(pfiDid);
+  } catch (e) {
+    console.log('error', e);
   }
-  catch (e) {
-    console.log('error', e)
-  }
-  // offering.sign(config.pfiDid[index % 5])  // Sign with alternating URI
 
-  offering.validate()
+  offering.validate();
   PresentationExchange.validateDefinition({
     presentationDefinition: offering.data.requiredClaims
-  })
+  });
 
-  // console.log(`Offering ${index + 1} created and validated`)
-  return offering
+  return offering;
 }
 
 // Initialize an array of hardcoded offerings
-const hardcodedOfferings: Offering[] = await Promise.all(Array.from({ length: 2 }, (_, i) => createRandomOffering(i)))
-
+const hardcodedOfferings: Offering[] = await Promise.all(
+  config.pfiDid.flatMap((_, pfiIndex) =>
+    [offeringDataKESToBTC, offeringDataBTCToKES].map(baseOffering => createOfferingForPFI(pfiIndex, baseOffering))
+  )
+);
 export class HardcodedOfferingRepository implements OfferingsApi {
   pfi: BearerDid
   pfiHardcodedOfferings: Offering[]
