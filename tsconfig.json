@@ -11,5 +11,5 @@
     "declarationDir": "dist/types",
     "sourceMap": true
   },
-  "include": ["src"]
+  "include": ["src", "cli"]
 }

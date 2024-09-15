@@ -7,6 +7,7 @@
     "@web5/credentials": "1.0.3",
     "@web5/dids": "1.1.1",
     "ajv": "8.12.0",
+    "axios": "^1.7.7",
     "cborg": "^3.0.0",
     "dotenv": "16.3.1",
     "express": "4.19.2",
@@ -16,7 +17,9 @@
     "loglevel-plugin-prefix": "0.8.4",
     "ms": "2.1.3",
     "node-fetch": "^3.3.2",
-    "papaparse": "^5.4.1"
+    "papaparse": "^5.4.1",
+    "uuid": "^10.0.0",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@sphereon/pex-models": "2.0.3",
@@ -31,6 +34,8 @@
     "@types/pg": "8.10.2",
     "@types/sinon": "10.0.15",
     "@types/supertest": "2.0.12",
+    "@types/uuid": "^10.0.0",
+    "@types/yargs": "^17.0.33",
     "@typescript-eslint/eslint-plugin": "6.2.1",
     "@typescript-eslint/parser": "6.2.1",
     "chai": "4.3.7",
@@ -50,8 +55,9 @@
     "compile": "tsc",
     "lint": "eslint . --ext .ts --max-warnings 0",
     "lint:fix": "eslint . --ext .ts --fix",
-    "server": "npm run compile && node --enable-source-maps dist/main.js",
+    "server": "npm run compile && node --enable-source-maps dist/src/main.js",
     "test": "rimraf dist/tests && npm run compile && node --test",
-    "test:e2e": "node src/test_end2end.cjs"
+    "test:e2e": "node src/test_end2end.cjs",
+    "cli": "node dist/cli/index.js"
   }
 }
