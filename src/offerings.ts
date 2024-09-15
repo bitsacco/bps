@@ -16,7 +16,7 @@ export const offeringDataKESToBTC: OfferingData = {
     currencyCode: 'BTC',
     methods: [
       {
-        kind: 'BTC_WALLET_ADDRESS',
+        kind: 'BTC_LIGHTNING_ADDRESS',
         estimatedSettlementTime: 300, // 5 minutes in seconds
         requiredPaymentDetails: {
           '$schema': 'http://json-schema.org/draft-07/schema#',
@@ -28,8 +28,8 @@ export const offeringDataKESToBTC: OfferingData = {
           'additionalProperties': false,
           'properties': {
             'address': {
-              'title': 'BTC Wallet Address',
-              'description': 'Wallet address to pay out BTC to',
+              'title': 'BTC lightning Address',
+              'description': 'Lightning address to pay out BTC to',
               'type': 'string'
             },
           }
